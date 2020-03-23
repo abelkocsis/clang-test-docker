@@ -1,0 +1,5 @@
+curl
+doxygen
+git
+py3-virtualenv
+python3-dev
