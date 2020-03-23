@@ -1,17 +1,17 @@
 FROM debian:stable-slim
 
-ARG mode="[setup,run]"
-ARG procejts="[curl, git]"
+ARG setup=TRUE
+ARG run=TRUE
+ARG projects=curl,clang,llvm
 
 LABEL maintainer="Ábel Kocsis <kocsis.abel.98@gmail.com>"
 
 RUN apt-get -yqq update
-RUN apt-get install -yqq python-dev
 
 ADD . /opt/wd
 WORKDIR /opt/wd
 
-RUN python setup-deps.py $mode $procejts
+RUN bash setup-deps.sh $setup $run $projects
 #RUN cat ./requirements_curl_debian.txt | xargs apt-get -yqq install
 #RUN cat ./requirements_codechecker_debian.txt | xargs apt-get -yqq install
 
