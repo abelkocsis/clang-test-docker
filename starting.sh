@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 cd /testDir
 git clone https://github.com/Ericsson/codechecker.git
 cd /testDir/codechecker
