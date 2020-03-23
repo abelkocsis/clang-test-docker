@@ -1,16 +1,16 @@
-FROM alpine:latest
+FROM debian:stable-slim
 
 LABEL maintainer="Ábel Kocsis <kocsis.abel.98@gmail.com>"
 
 #for curl
-RUN apk update
+RUN apt-get -yqq update
+#RUN apt-get install -yqq apt-utils
 
 ADD . /opt/wd
 WORKDIR /opt/wd
 
-RUN cat ./requirements_build_essentials.txt | xargs apk add --no-cache
-RUN cat ./requirements_curl_alpine.txt | xargs apk add --no-cache
-RUN cat ./requirements_codechecker_alpine.txt | xargs apk add --no-cache
+RUN cat ./requirements_curl_debian.txt | xargs apt-get -yqq install
+RUN cat ./requirements_codechecker_debian.txt | xargs apt-get -yqq install
 
 
 WORKDIR /opt/wd
