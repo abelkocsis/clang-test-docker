@@ -6,3 +6,4 @@ git
 python-virtualenv
 python-dev
 thrift-compiler
+python3

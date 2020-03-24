@@ -21,5 +21,12 @@ projects+=( "codechecker" )
 
 for p in "${projects[@]}"
 do
-    cat "./requirements/"$p"_debian.txt" | xargs apt-get -yqq install
+    if [ -f "./requirements/"$p"_custom_setup_debian.sh" ]; then
+        echo "Custom setup for $p: ./requirements/"$p"_custom_setup_debian.sh"
+        bash "./requirements/"$p"_custom_setup_debian.sh"
+    elif [ ! -f "./requirements/"$p"_debian.txt" ]; then
+        echo "Warning: " "./requirements/"$p"_debian.txt" "not exist! Make sure that you set up the " "./requirements/"$p"_debian.txt" "correctly or the project has no dependencies!"
+    else
+        cat "./requirements/"$p"_debian.txt" | xargs apt-get -yqq install
+    fi
 done

@@ -1,0 +1,6 @@
+libncurses5-dev
+libncursesw5-dev
+libevent-dev
+autoconf
+automake
+pkg-config
