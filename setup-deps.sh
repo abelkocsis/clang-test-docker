@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo $1
-
 setup=false
 run=false
 
@@ -18,6 +16,8 @@ fi
 projects_string="${@:3}"
 
 IFS=',' read -ra projects <<< "$projects_string"
+
+projects+=( "codechecker" )
 
 for p in "${projects[@]}"
 do

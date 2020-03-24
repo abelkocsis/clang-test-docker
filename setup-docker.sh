@@ -1,10 +1,7 @@
 #!/bin/bash
 
-username=$USER
-
-docker build -t test-setup-$username . --no-cache
-#docker build -t test-run-$username ./run-tests # --no-cache
+docker build -t test-clang-$USER .
 
 testingRootDir=/home/abelkocsis/clang-tests
 
-#docker run --interactive --tty -v $testingRootDir:/testDir test-setup-$username
+docker run --interactive --tty -v $testingRootDir:/testDir test-clang-$USER

@@ -2,7 +2,11 @@ FROM debian:stable-slim
 
 ARG setup=TRUE
 ARG run=TRUE
-ARG projects=curl,clang,llvm
+ARG projects=curl
+
+ENV setup ${setup}
+ENV run ${run}
+ENV projects ${projects}
 
 LABEL maintainer="Ábel Kocsis <kocsis.abel.98@gmail.com>"
 
@@ -12,8 +16,6 @@ ADD . /opt/wd
 WORKDIR /opt/wd
 
 RUN bash setup-deps.sh $setup $run $projects
-#RUN cat ./requirements_curl_debian.txt | xargs apt-get -yqq install
-#RUN cat ./requirements_codechecker_debian.txt | xargs apt-get -yqq install
 
-#CMD ["bash", "./starting.sh" ]
+CMD ["bash", "-c", "./start.sh ${setup} ${run} ${projects}" ]
 
