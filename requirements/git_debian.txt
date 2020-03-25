@@ -1,1 +1,3 @@
 gettext
+autoconf
+libz-dev

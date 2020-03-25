@@ -2,7 +2,7 @@ FROM debian:stable-slim
 
 ARG setup=TRUE
 ARG run=TRUE
-ARG projects=curl,ffmpeg,memcached,postgres,redis,tmux,xerces
+ARG projects=curl,ffmpeg,memcached,postgres,redis,tmux,xerces,nginx,openssl
 
 ENV setup ${setup}
 ENV run ${run}

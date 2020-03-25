@@ -2,13 +2,12 @@
 
 cd /testDir
 if [ ! -d  sqlite ]; then
+    export FOSSIL_USER=user
     mkdir sqlite
     cd sqlite
     fossil clone https://www.sqlite.org/src sqlite.fossil
-else
-    cd sqlite
-    fossil pull
+    fossil open sqlite.fossil
 fi
+cd /testDir/sqlite
 
-fossil open sqlite.fossil
 ./configure
