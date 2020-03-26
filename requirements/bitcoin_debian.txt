@@ -1,0 +1,11 @@
+build-essential
+libtool
+autotools-dev
+automake
+pkg-config
+bsdmainutils
+python3
+libdb++-dev
+libdb4.8
+libevent-dev
+libboost-all-dev

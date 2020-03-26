@@ -46,7 +46,7 @@ if $setup; then
             git clone ${data[$p]}
         else
             cd /testDir/$p
-            git pull upstream master
+            #git pull upstream master
         fi
         cd /testDir/$p
         #latesttag=$(git describe --tags)
@@ -118,8 +118,8 @@ if $setup; then
         cd /testDir/$p
         echo "Running CodeChecker log on "$p"..."
         $codeChecker log -b "make -j42" "-o compilation.json"
-        cp "/testDir/$p/compilation.json" "/testDir/compilations/"$p"_compilation.json"
-        rm "/testDir/$p/compilation.json"
+        #cp "/testDir/$p/compilation.json" "/testDir/compilations/"$p"_compilation.json"
+        #rm "/testDir/$p/compilation.json"
     done 
 
 fi

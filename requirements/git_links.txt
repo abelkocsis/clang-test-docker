@@ -1,3 +1,4 @@
+bitcoin https://github.com/bitcoin/bitcoin.git
 codechecker https://github.com/Ericsson/codechecker.git
 curl https://github.com/curl/curl.git
 ffmpeg https://git.ffmpeg.org/ffmpeg.git

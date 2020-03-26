@@ -4,3 +4,4 @@ apt-get -yqq install build-essential libtool autotools-dev automake pkg-config l
 add-apt-repository ppa:bitcoin/bitcoin
 apt-get -yqq update
 apt-get -yqq install libdb4.8-dev libdb4.8++-dev
+
