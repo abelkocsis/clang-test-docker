@@ -10,14 +10,20 @@ fi
 
 if [ "$2" == "TRUE" ];
 then
-    setup=true
+    run=true
 fi
 
 projects_string="${@:3}"
 
-IFS=',' read -ra projects <<< "$projects_string"
-
-projects+=( "codechecker" )
+if setup; then
+    IFS=',' read -ra projects <<< "$projects_string"
+    projects+=( "codechecker" )
+else
+    projects=( "codechecker" )
+    if [ ! run ]; then
+        echo "You must select at least one of the following functions: setup, run!"
+    fi
+fi
 
 for p in "${projects[@]}"
 do

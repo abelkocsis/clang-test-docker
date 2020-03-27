@@ -2,16 +2,22 @@
 
 setup=false
 run=false
+deleteAfterAnalyse=false
+checker=$3
 
 if [ "$1" == "TRUE" ]; then
     setup=true
 fi
 
 if [ "$2" == "TRUE" ]; then
-    setup=true
+    run=true
 fi
 
-projects_string="${@:3}"
+if [ "$4" == "TRUE" ]; then
+    deleteAfterAnalyse=true
+fi
+
+projects_string="${@:5}"
 
 IFS=',' read -ra projects <<< "$projects_string"
 
@@ -37,7 +43,9 @@ for p in "${!data[@]}"; do
     fi
 done
 
+#SETUP
 if $setup; then
+    echo "Setting up projects..."
     for p in "${!data[@]}"; do
 
         cd /testDir
@@ -117,12 +125,73 @@ if $setup; then
     for p in "${!data[@]}"; do
         cd /testDir/$p
         echo "Running CodeChecker log on "$p"..."
-        $codeChecker log -b "make -j42" "-o compilation.json"
-        #cp "/testDir/$p/compilation.json" "/testDir/compilations/"$p"_compilation.json"
-        #rm "/testDir/$p/compilation.json"
+        $codeChecker log -b "make -j42" "-o" "compilation.json"
+        cp "compilation.json" "/testDir/compilations/"$p"_compilation.json"
+        rm "compilation.json"
+    done 
+
+    if $deleteAfterAnalyse; then
+        echo "Deleting folders"
+        cd /testDir
+        for p in "${!data[@]}"; do
+            echo "Deleting "$p"..."
+            rm -r $p
+        done 
+    fi
+fi
+
+#Running checks
+if $run; then
+    echo "Setting up environment..."
+    cd /testDir/codechecker
+    . /testDir/codechecker/venv/bin/activate
+    export PATH=/testDir/codechecker/build/CodeChecker/bin:$PATH
+    export PATH=/llvmBin:$PATH
+    
+    cd /testDir
+    if [ ! -d reports ]; then
+        mkdir reports
+    fi
+
+    cd /testDir/compilations
+    unset 'data[codechecker]'
+
+    echo "checker:" $checker
+    echo "cheWeverythingcker:" $Weverything
+
+    if [ "$checker" == "all" ]; then
+        Weverything=""
+        checker="--enable-all"
+    else
+        checker="--enable $checker"
+        Weverything="--disable Weverything"
+    fi 
+
+    echo "checker:" $checker
+    echo "cheWeverythingcker:" $Weverything
+
+    echo "Running analysis..."
+    for p in "${!data[@]}"; do
+        echo "Running CodeChecker analyze on "$p"..."
+        if [ ! -d "/testDir/reports/"$p ]; then
+            mkdir "/testDir/reports/"$p
+        fi
+        CodeChecker analyze \
+            $p"_compilation.json" \
+            --analyzers clang-tidy \
+            --disable default \
+            $Weverything \
+            $checker \
+            -o "/testDir/reports/"$p \
+            -j 42
+            #TODO:
+            #--tidyargs /home/username/test_env/tidy_args.txt
+            
+        CodeChecker parse "/testDir/reports/"$p -e html -o "/testDir/reports/"$p
     done 
 
 fi
+
 
 
 
