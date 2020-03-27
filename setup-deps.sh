@@ -15,12 +15,12 @@ fi
 
 projects_string="${@:3}"
 
-if setup; then
+if $setup; then
     IFS=',' read -ra projects <<< "$projects_string"
     projects+=( "codechecker" )
 else
     projects=( "codechecker" )
-    if [ ! run ]; then
+    if [ ! $run ]; then
         echo "You must select at least one of the following functions: setup, run!"
     fi
 fi

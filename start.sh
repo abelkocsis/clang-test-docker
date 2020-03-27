@@ -44,6 +44,7 @@ for p in "${!data[@]}"; do
 done
 
 #SETUP
+setupStart=$(($(date +%s%N)/1000000))
 if $setup; then
     echo "Setting up projects..."
     for p in "${!data[@]}"; do
@@ -54,11 +55,11 @@ if $setup; then
             git clone ${data[$p]}
         else
             cd /testDir/$p
-            #git pull upstream master
+            git fetch --all --tags
         fi
         cd /testDir/$p
-        #latesttag=$(git describe --tags)
-        #git checkout ${latesttag}
+        latesttag=$(git describe --tags)
+        git checkout tags/$latestRelease
     done
 
     unset 'data[codechecker]'
@@ -94,7 +95,10 @@ if $setup; then
 
         fi
     done
-
+    diff=$(($(($(date +%s%N)/1000000))-$setupStart))
+    time_secs=`echo "scale=3;$diff/1000" | bc`
+    
+    echo "Setup excecuted in "$time_secs" seconds."
     #codechekcer setup
     echo "Setting up CodeChecker..."
 
@@ -191,12 +195,3 @@ if $run; then
     done 
 
 fi
-
-
-
-
-
-
-
-
-
