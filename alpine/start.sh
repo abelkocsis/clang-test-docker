@@ -73,10 +73,6 @@ if $setup; then
             bash "./setup.sh"
             rm ./setup.sh
         else
-            if [ -f "CMakeLists.txt" ]; then
-                echo "CMAkeLists.txt found"
-                cmake .
-            fi
             if [ -f "./autogen.sh" ]; then
                 echo "autogen.sh found"
                 sh ./autogen.sh

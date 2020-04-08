@@ -1,0 +1,13 @@
+clang
+clang-tidy
+build-essential
+curl
+doxygen
+gcc-multilib
+git
+python-virtualenv
+python-dev
+thrift-compiler
+python3-dev
+python3
+jq

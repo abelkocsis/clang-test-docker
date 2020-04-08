@@ -1,5 +1,6 @@
-curl
+alpine-sdk
 doxygen
+gcc
 git
-py3-virtualenv
 python3-dev
+jq
