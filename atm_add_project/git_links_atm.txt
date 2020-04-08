@@ -13,3 +13,13 @@ git https://github.com/git/git.git
 vim https://github.com/vim/vim.git
 cpp-taskflow https://github.com/cpp-taskflow/cpp-taskflow.git
 proj projlink
+p pl
+p pl
+p pl
+p pl
+p pl
+p pl
+p pl
+p pl
+p ps
+p pl

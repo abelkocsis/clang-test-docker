@@ -1,6 +1,6 @@
 #!/bin/bash
 
-root=/home/abelkocsis/clang-tests/clang-test-docker/atm_add_project
+root=$PWD
 
 #NAME
 printf "Adding project to test docker..."
@@ -8,7 +8,7 @@ printf "\nProject name: "
 read name
 
 #LINK -> git_links.txt
-printf "\nProject github link:"
+printf "\nProject github link: "
 read link
 
 echo "$name $link" >> $root/git_links_atm.txt
@@ -38,7 +38,18 @@ else
 fi
 
 #SETUP
-#extrasetup -> ./requirements/p_setup.sh
+printf "\nAfter cloning, the tester automatically finds the following files in the project main directory: autogen.sh, configure.sh, CMakeLists.txt, buildconf.sh."
 
 #config_Args -> ./requirements/p_config_args.txt
+printf "\nIf you want, you can add additional arguments to the configure.sh file by typing here: "
+read configArgs
+if [ "$configArgs" ]; then
+    echo "$configArgs" > "$root/$name""_config_args.txt"
+fi
 
+#extrasetup -> ./requirements/p_setup.sh
+printf "You can add special setup file: "
+read specSetup
+if [ "$specSetup" ]; then
+    cp "$specSetup" "$root/$name""_setup.sh"
+fi
