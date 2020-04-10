@@ -21,6 +21,6 @@ WORKDIR /opt/wd
 
 RUN bash setup-deps.sh $setup $run $projects
 
-CMD ["bash", "-c", "/testDir/clang-test-docker/start.sh ${setup} ${run} ${checker} ${deleteAfterAnalyse} ${projects}" ]
+#CMD ["bash", "-c", "/testDir/clang-test-docker/start.sh ${setup} ${run} ${checker} ${deleteAfterAnalyse} ${projects}" ]
 #TODO: ./start.sh
 

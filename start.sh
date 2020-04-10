@@ -44,7 +44,7 @@ for p in "${!data[@]}"; do
 done
 
 #SETUP
-setupStart=$(($(date +%s%N)/1000000))
+#setupStart=$(($(date +%s%N)/1000000))
 if $setup; then
     echo "Setting up projects..."
     for p in "${!data[@]}"; do
@@ -59,7 +59,7 @@ if $setup; then
         fi
         cd /testDir/$p
         latesttag=$(git describe --tags)
-        git checkout tags/$latestRelease
+        git checkout tags/$latesttag
     done
 
     unset 'data[codechecker]'
@@ -67,6 +67,7 @@ if $setup; then
     for p in "${!data[@]}"; do
         cd /testDir/$p
         echo "Configuring "$p"..."
+        make clean
         if [ -f  "/opt/wd/requirements/"$p"_setup.sh" ]; then
             echo "Special config file found"
             cp "/opt/wd/requirements/"$p"_setup.sh" ./setup.sh
@@ -99,8 +100,8 @@ if $setup; then
 
         fi
     done
-    diff=$(($(($(date +%s%N)/1000000))-$setupStart))
-    time_secs=`echo "scale=3;$diff/1000" | bc`
+    #diff=$(($(($(date +%s%N)/1000000))-$setupStart))
+    #time_secs=`echo "scale=3;$diff/1000" | bc`
     
     echo "Setup excecuted in "$time_secs" seconds."
     #codechekcer setup
@@ -110,7 +111,6 @@ if $setup; then
     make venv
     . $PWD/venv/bin/activate
     make package
-    export PATH="$PWD/build/CodeChecker/bin:$PATH"
     codeChecker=/testDir/codechecker/build/CodeChecker/bin/CodeChecker
 
     if [ ! -d /llvmBin ] ; then
@@ -133,7 +133,7 @@ if $setup; then
     for p in "${!data[@]}"; do
         cd /testDir/$p
         echo "Running CodeChecker log on "$p"..."
-        $codeChecker log -b "make -j42" "-o" "compilation.json"
+        $codeChecker log -b "make all -j42" "-o" "compilation.json"
         cp "compilation.json" "/testDir/compilations/"$p"_compilation.json"
         rm "compilation.json"
     done 
