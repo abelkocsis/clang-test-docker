@@ -22,19 +22,25 @@ projects_string="${@:5}"
 IFS=',' read -ra projects <<< "$projects_string"
 
 declare -A data
-for p in ${projects[@]}
-do
-    data+=([$p]="")
-done
 
-data+=(["codechecker"]="")
-
-while read proj link
-do
-    if [[ "${!data[@]}" =~ "${proj}" ]]; then
+if [ "$projects" == "all" ]; then
+    while read proj link
+    do
         data[$proj]=$link
-    fi  
-done < "requirements/git_links.txt"
+    done < "requirements/git_links.txt"
+else
+    for p in ${projects[@]}
+    do
+        data+=([$p]="")
+    done
+    data+=(["codechecker"]="")
+    while read proj link
+    do
+        if [[ "${!data[@]}" =~ "${proj}" ]]; then
+            data[$proj]=$link
+        fi  
+    done < "requirements/git_links.txt"
+fi
 
 echo ${data[@]}
 for p in "${!data[@]}"; do 

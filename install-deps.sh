@@ -25,6 +25,14 @@ else
     fi
 fi
 
+if [ "$projects" == "all" ]; then
+    unset projects
+    while read proj link
+    do
+        projects+=($proj)
+    done < "./requirements/git_links.txt"
+fi
+
 for p in "${projects[@]}"
 do
     if [ -f "./requirements/"$p"_custom_setup_debian.sh" ]; then
