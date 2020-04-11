@@ -12,3 +12,5 @@ bitcoin https://github.com/bitcoin/bitcoin.git
 git https://github.com/git/git.git
 vim https://github.com/vim/vim.git
 cpp-taskflow https://github.com/cpp-taskflow/cpp-taskflow.git
+enkiTS https://github.com/dougbinks/enkiTS
+RaftLib https://github.com/RaftLib/RaftLib

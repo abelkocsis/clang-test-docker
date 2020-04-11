@@ -11,7 +11,7 @@ read name
 printf "\nProject github link: "
 read link
 
-echo "$name $link" >> $root/requirements/git_links_atm.txt
+echo "$name $link" >> $root/requirements/git_links.txt
 
 #REQUIREMENTS
 #txt -> ./requirements/$p_debian.txt

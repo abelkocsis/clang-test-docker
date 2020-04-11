@@ -2,7 +2,7 @@ FROM debian:stable-slim
 
 ARG setup=TRUE
 ARG run=TRUE
-ARG projects=curl,ffmpeg,memcached,postgres,redis,tmux,nginx,openssl,git,sqlite,bitcoin,vim,cpp-taskflow
+ARG projects=curl,ffmpeg,memcached,postgres,redis,tmux,nginx,openssl,git,sqlite,bitcoin,vim,cpp-taskflow,RaftLib,enkiTS
 ARG checker="all"
 ARG deleteAfterAnalyse=FALSE
 
