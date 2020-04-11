@@ -30,14 +30,14 @@ if [ "$projects" == "all" ]; then
     while read proj link
     do
         projects+=($proj)
-    done < "./requirements/git_links.txt"
+    done < "./project_links.txt"
 fi
 
 for p in "${projects[@]}"
 do
-    if [ -f "./requirements/"$p"_custom_setup_debian.sh" ]; then
-        echo "Custom setup for $p: ./requirements/"$p"_custom_setup_debian.sh"
-        bash "./requirements/"$p"_custom_setup_debian.sh"
+    if [ -f "./requirements/"$p"_custom_deps_debian.sh" ]; then
+        echo "Custom setup for $p: ./requirements/"$p"_custom_deps_debian.sh"
+        bash "./requirements/"$p"_custom_deps_debian.sh"
     elif [ ! -f "./requirements/"$p"_debian.txt" ]; then
         echo "Warning: " "./requirements/"$p"_debian.txt" "not exist! Make sure that you set up the " "./requirements/"$p"_debian.txt" "correctly or the project has no dependencies!"
     else

@@ -14,3 +14,4 @@ vim https://github.com/vim/vim.git
 cpp-taskflow https://github.com/cpp-taskflow/cpp-taskflow.git
 enkiTS https://github.com/dougbinks/enkiTS
 RaftLib https://github.com/RaftLib/RaftLib
+FiberTaskingLib https://github.com/RichieSams/FiberTaskingLib

@@ -27,7 +27,7 @@ if [ "$projects" == "all" ]; then
     while read proj link
     do
         data[$proj]=$link
-    done < "requirements/git_links.txt"
+    done < "project_links.txt"
 else
     for p in ${projects[@]}
     do
@@ -39,7 +39,7 @@ else
         if [[ "${!data[@]}" =~ "${proj}" ]]; then
             data[$proj]=$link
         fi  
-    done < "requirements/git_links.txt"
+    done < "project_links.txt"
 fi
 
 echo ${data[@]}
@@ -74,9 +74,9 @@ if $setup; then
         cd /testDir/$p
         echo "Configuring "$p"..."
         make clean
-        if [ -f  "/opt/wd/requirements/"$p"_setup.sh" ]; then
+        if [ -f  "/opt/wd/setup_files/"$p"_setup.sh" ]; then
             echo "Special config file found"
-            cp "/opt/wd/requirements/"$p"_setup.sh" ./setup.sh
+            cp "/opt/wd/setup_files/"$p"_setup.sh" ./setup.sh
             bash "./setup.sh"
             rm ./setup.sh
         else
@@ -94,9 +94,9 @@ if $setup; then
             fi
             if [ -f "./configure" ]; then
                 echo "Configure file found"
-                if [ -f "/opt/wd/requirements/"$p"_config_args.txt" ]; then
+                if [ -f "/opt/wd/setup_files/"$p"_config_args.txt" ]; then
                     echo "Configure argument file found"
-                    arguments=$(<"/opt/wd/requirements/"$p"_config_args.txt")
+                    arguments=$(<"/opt/wd/setup_files/"$p"_config_args.txt")
                     echo "READ ARGUMENTS: " $arguments
                     ./configure $arguments
                 else
