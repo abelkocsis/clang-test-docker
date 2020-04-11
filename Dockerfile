@@ -2,7 +2,7 @@ FROM debian:stable-slim
 
 ARG setup=TRUE
 ARG run=TRUE
-ARG projects=curl,ffmpeg,memcached,postgres,redis,tmux,xerces,nginx,openssl,git,sqlite,bitcoin
+ARG projects=curl,ffmpeg,memcached,postgres,redis,tmux,nginx,openssl,git,sqlite,bitcoin,vim,cpp-taskflow
 ARG checker="all"
 ARG deleteAfterAnalyse=FALSE
 
@@ -21,6 +21,6 @@ WORKDIR /opt/wd
 
 RUN bash setup-deps.sh $setup $run $projects
 
-#CMD ["bash", "-c", "/testDir/clang-test-docker/start.sh ${setup} ${run} ${checker} ${deleteAfterAnalyse} ${projects}" ]
+CMD ["bash", "-c", "/testDir/clang-test-docker/start.sh ${setup} ${run} ${checker} ${deleteAfterAnalyse} ${projects}" ]
 #TODO: ./start.sh
 

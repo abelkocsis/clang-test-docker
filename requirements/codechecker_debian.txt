@@ -1,6 +1,8 @@
 build-essential
+curl
 doxygen
 gcc-multilib
 git
 python3-dev
+python-virtualenv
 jq

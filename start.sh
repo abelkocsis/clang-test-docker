@@ -111,6 +111,7 @@ if $setup; then
     make venv
     . $PWD/venv/bin/activate
     make package
+    export PATH="$PWD/build/CodeChecker/bin:$PATH"
     codeChecker=/testDir/codechecker/build/CodeChecker/bin/CodeChecker
 
     if [ ! -d /llvmBin ] ; then
@@ -133,7 +134,7 @@ if $setup; then
     for p in "${!data[@]}"; do
         cd /testDir/$p
         echo "Running CodeChecker log on "$p"..."
-        $codeChecker log -b "make all -j42" "-o" "compilation.json"
+        $codeChecker log -b "make -j42" "-o" "compilation.json"
         cp "compilation.json" "/testDir/compilations/"$p"_compilation.json"
         rm "compilation.json"
     done 
