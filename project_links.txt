@@ -8,7 +8,6 @@ postgres https://github.com/postgres/postgres.git
 redis https://github.com/antirez/redis.git
 tmux https://github.com/tmux/tmux.git
 openssl https://github.com/openssl/openssl
-bitcoin https://github.com/bitcoin/bitcoin.git
 git https://github.com/git/git.git
 vim https://github.com/vim/vim.git
 cpp-taskflow https://github.com/cpp-taskflow/cpp-taskflow.git

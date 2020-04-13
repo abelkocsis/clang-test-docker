@@ -1,25 +1,36 @@
 #!/bin/bash
 
-setup=false
-run=false
-deleteAfterAnalyse=false
+setup=true
+run=true
+delete=false
 checker=$3
+list=false
 
-if [ "$1" == "TRUE" ]; then
-    setup=true
+if [ "$1" == "FALSE" ]; then
+    setup=false
 fi
 
-if [ "$2" == "TRUE" ]; then
-    run=true
+if [ "$2" == "FALSE" ]; then
+    run=false
 fi
 
 if [ "$4" == "TRUE" ]; then
-    deleteAfterAnalyse=true
+    delete=true
 fi
 
-projects_string="${@:5}"
+if [ "$5" == "TRUE" ]; then
+    list=true
+fi
+
+projects_string="${@:6}"
 
 IFS=',' read -ra projects <<< "$projects_string"
+
+if $list; then
+    printf "The container have been set up for the following projects:\n\n"
+    printf '%s\n' "${projects[@]}"
+    exit 1
+fi
 
 declare -A data
 
@@ -120,14 +131,14 @@ if $setup; then
     export PATH="$PWD/build/CodeChecker/bin:$PATH"
     codeChecker=/testDir/codechecker/build/CodeChecker/bin/CodeChecker
 
-    if [ ! -d /llvmBin ] ; then
+    if [ ! -d /llvm-project ] ; then
         echo "Warning: own clang was not specified"
-    elif [ ! -f /llvmBin/clang ] || [ ! -f /llvmBin/clang-tidy ] ; then
+    elif [ ! -f /llvm-project/build/bin/clang ] || [ ! -f /llvm-project/build/bin/clang-tidy ] ; then
         echo "Warning: clang or clang-tidy binaries not found"
     else
         cd /testDir/codechecker/build/CodeChecker/config/
         json=`cat package_layout.json`
-        echo $json | jq '.runtime.analyzers.clangsa="/llvmBin/clang"' | jq '.runtime.analyzers."clang-tidy"="/llvmBin/clang-tidy"' > package_layout.json
+        echo $json | jq '.runtime.analyzers.clangsa="/llvm-project/build/bin/clang"' | jq '.runtime.analyzers."clang-tidy"="/llvm-project/build/bin/clang-tidy"' > package_layout.json
     fi
 
     #setup compilations dir
@@ -141,18 +152,10 @@ if $setup; then
         cd /testDir/$p
         echo "Running CodeChecker log on "$p"..."
         $codeChecker log -b "make -j42" "-o" "compilation.json"
-        cp "compilation.json" "/testDir/compilations/"$p"_compilation.json"
-        rm "compilation.json"
+        #cp "compilation.json" "/testDir/compilations/"$p"_compilation.json"
+        #rm "compilation.json"
     done 
 
-    if $deleteAfterAnalyse; then
-        echo "Deleting folders"
-        cd /testDir
-        for p in "${!data[@]}"; do
-            echo "Deleting "$p"..."
-            rm -r $p
-        done 
-    fi
 fi
 
 #Running checks
@@ -161,14 +164,14 @@ if $run; then
     cd /testDir/codechecker
     . /testDir/codechecker/venv/bin/activate
     export PATH=/testDir/codechecker/build/CodeChecker/bin:$PATH
-    export PATH=/llvmBin:$PATH
+    export PATH=/llvm-project:$PATH
     
     cd /testDir
     if [ ! -d reports ]; then
         mkdir reports
     fi
 
-    cd /testDir/compilations
+    
     unset 'data[codechecker]'
 
     echo "checker:" $checker
@@ -188,11 +191,12 @@ if $run; then
     echo "Running analysis..."
     for p in "${!data[@]}"; do
         echo "Running CodeChecker analyze on "$p"..."
+        cd /testDir/$p
         if [ ! -d "/testDir/reports/"$p ]; then
             mkdir "/testDir/reports/"$p
         fi
         CodeChecker analyze \
-            $p"_compilation.json" \
+            "compilation.json" \
             --analyzers clang-tidy \
             --disable default \
             $Weverything \
@@ -205,4 +209,13 @@ if $run; then
         CodeChecker parse "/testDir/reports/"$p -e html -o "/testDir/reports/"$p
     done 
 
+fi
+
+if $delete; then
+    echo "Deleting projects"
+    cd /testDir
+    for p in "${!data[@]}"; do
+        echo "Deleting "$p"..."
+        rm -r $p
+    done 
 fi

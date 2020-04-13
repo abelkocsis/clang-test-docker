@@ -2,15 +2,16 @@ FROM debian:stable-slim
 
 ARG setup=TRUE
 ARG run=TRUE
-ARG projects="all"
 ARG checker="all"
-ARG deleteAfterAnalyse=FALSE
+ARG delete=FALSE
+ARG projects="all"
 
 ENV setup ${setup}
 ENV run ${run}
 ENV projects ${projects}
 ENV checker=${checker}
-ENV deleteAfterAnalyse=${deleteAfterAnalyse}
+ENV delete=${delete}
+ENV list=FALSE
 
 LABEL maintainer="Ábel Kocsis <kocsis.abel.98@gmail.com>"
 
@@ -21,6 +22,6 @@ WORKDIR /opt/wd
 
 RUN bash install-deps.sh $setup $run $projects
 
-CMD ["bash", "-c", "/testDir/clang-test-docker/start.sh ${setup} ${run} ${checker} ${deleteAfterAnalyse} ${projects}" ]
+CMD ["bash", "-c", "/testDir/clang-test-docker/start.sh ${setup} ${run} ${checker} ${delete} ${list} ${projects}" ]
 #TODO: ./start.sh
 
