@@ -1,8 +1,8 @@
 #!/bin/bash
 
-docker build -t test-clang-$USER . --rm # --no-cache --build-arg projects=curl,ffmpeg
+docker build -t test-clang . --rm # --no-cache --build-arg projects=curl,ffmpeg
 
 testingRootDir=/home/abelkocsis/clang-tests
-llvmBin=/home/abelkocsis/llvm-project/build/bin
+llvm=/home/abelkocsis/thesis/llvm-project/
 
-docker run --interactive --tty --rm -v $testingRootDir:/testDir -v $llvmBin:/llvmBin test-clang-$USER # -e "projects=curl"
+docker run --interactive --tty --rm -v $testingRootDir:/testDir -v $llvm:/llvm-project test-clang # -e "projects=curl"

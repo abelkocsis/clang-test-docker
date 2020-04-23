@@ -24,4 +24,3 @@ RUN bash install-deps.sh $setup $run $projects
 
 CMD ["bash", "-c", "/testDir/clang-test-docker/start.sh ${setup} ${run} ${checker} ${delete} ${list} ${projects}" ]
 #TODO: ./start.sh
-

@@ -1,14 +1,14 @@
 #!/bin/bash
 
-setup=false
-run=false
+setup=true
+run=true
 
-if [ "$1" == "TRUE" ];
+if [ "$1" == "FALSE" ];
 then
     setup=true
 fi
 
-if [ "$2" == "TRUE" ];
+if [ "$2" == "FALSE" ];
 then
     run=true
 fi
