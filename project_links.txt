@@ -7,10 +7,11 @@ nginx https://github.com/nginx/nginx.git
 postgres https://github.com/postgres/postgres.git
 redis https://github.com/antirez/redis.git
 tmux https://github.com/tmux/tmux.git
-openssl https://github.com/openssl/openssl
+openssl https://github.com/openssl/openssl.git
 git https://github.com/git/git.git
 vim https://github.com/vim/vim.git
 cpp-taskflow https://github.com/cpp-taskflow/cpp-taskflow.git
-enkiTS https://github.com/dougbinks/enkiTS
-RaftLib https://github.com/RaftLib/RaftLib
-FiberTaskingLib https://github.com/RichieSams/FiberTaskingLib
+enkiTS https://github.com/dougbinks/enkiTS.git
+RaftLib https://github.com/RaftLib/RaftLib.git
+FiberTaskingLib https://github.com/RichieSams/FiberTaskingLib.git
+ 

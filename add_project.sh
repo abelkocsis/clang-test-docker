@@ -24,7 +24,7 @@ else
     printf "Dependencies separated by space: "
     read depOnLine
     if [ "$depOnLine" ]; then
-        echo $depOnLine | tr " " "\n" > "$root/requirements/$name""_debian.txt"
+        echo $depOnLine | tr "," "\n" > "$root/requirements/$name""_debian.txt"
     else
         #extra -> ./requirements/$p_custom_deps_debian.sh
         printf "Special dependency setup file (.sh) destination: "
