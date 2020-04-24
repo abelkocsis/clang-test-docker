@@ -4,18 +4,31 @@ root=$PWD
 
 #NAME
 printf "Adding project to test docker..."
-printf "\nProject name: "
-read name
 
 #LINK -> git_links.txt
-printf "\nProject github link: "
+printf "\nPlease, paste the git link of the project here: "
 read link
 
+
+
+wget $link --no-check-certificate -o /dev/null
+if [ $? -ne 0 ]; then
+    echo "Invalid repository!"
+    exit 1
+else
+    printf "Repository checked."
+fi
+
+
+basename=$(basename $link)
+name=${basename%.*}
+
 echo "$name $link" >> $root/project_links.txt
+printf "\n$name project was saved."
 
 #REQUIREMENTS
 #txt -> ./requirements/$p_debian.txt
-printf "\nDependency file (.txt) destination: "
+printf "\nDependency file (.txt) destination for $name project: "
 read depTxt
 if [ $depTxt ]; then
     cp $depTxt "$root/requirements/$name""_debian.txt"
@@ -24,7 +37,7 @@ else
     printf "Dependencies separated by space: "
     read depOnLine
     if [ "$depOnLine" ]; then
-        echo $depOnLine | tr "," "\n" > "$root/requirements/$name""_debian.txt"
+        echo $depOnLine | tr " " "\n" > "$root/requirements/$name""_debian.txt"
     else
         #extra -> ./requirements/$p_custom_deps_debian.sh
         printf "Special dependency setup file (.sh) destination: "

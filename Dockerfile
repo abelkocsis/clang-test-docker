@@ -16,6 +16,7 @@ ENV list=FALSE
 LABEL maintainer="Ábel Kocsis <kocsis.abel.98@gmail.com>"
 
 RUN apt-get -yqq update
+RUN apt-get -yqq upgrade
 
 ADD . /opt/wd
 WORKDIR /opt/wd
