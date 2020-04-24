@@ -1,29 +1,9 @@
 #!/bin/bash
 
-setup=true
-run=true
+projects_string="${@}"
 
-if [ "$1" == "FALSE" ];
-then
-    setup=true
-fi
-
-if [ "$2" == "FALSE" ];
-then
-    run=true
-fi
-
-projects_string="${@:3}"
-
-if $setup; then
-    IFS=',' read -ra projects <<< "$projects_string"
-    projects+=( "codechecker" )
-else
-    projects=( "codechecker" )
-    if [ ! $run ]; then
-        echo "You must select at least one of the following functions: setup, run!"
-    fi
-fi
+IFS=',' read -ra projects <<< "$projects_string"
+projects+=( "codechecker" )
 
 if [ "$projects" == "all" ]; then
     unset projects
@@ -35,6 +15,7 @@ fi
 
 for p in "${projects[@]}"
 do
+    echo "Install dependencies for $p project..."
     if [ -f "./requirements/"$p"_custom_deps_debian.sh" ]; then
         echo "Custom setup for $p: ./requirements/"$p"_custom_deps_debian.sh"
         bash "./requirements/"$p"_custom_deps_debian.sh"

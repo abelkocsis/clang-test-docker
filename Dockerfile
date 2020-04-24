@@ -20,7 +20,7 @@ RUN apt-get -yqq update
 ADD . /opt/wd
 WORKDIR /opt/wd
 
-RUN bash install-deps.sh $setup $run $projects
+RUN bash install-deps.sh $projects
 
 CMD ["bash", "-c", "/testDir/clang-test-docker/start.sh ${setup} ${run} ${checker} ${delete} ${list} ${projects}" ]
 #TODO: ./start.sh
