@@ -3,14 +3,28 @@
 projects_string="${@}"
 
 IFS=',' read -ra projects <<< "$projects_string"
-projects+=( "codechecker" )
 
+if [ -z "$projects" ]; then
+    echo "Error: You must add at least one project!"
+    exit 1
+fi
+if [ ! -f "./project_links.txt" ]; then
+    echo "Error: project_links.txt file not found!"
+    exit 2
+fi
+if [ ! -d "./requirements" ]; then
+    echo "Error: requirements folder not found!"
+    exit 3
+fi
+
+projects+=( "codechecker" )
 if [ "$projects" == "all" ]; then
     unset projects
     while read proj link
     do
         projects+=($proj)
     done < "./project_links.txt"
+
 fi
 
 for p in "${projects[@]}"
