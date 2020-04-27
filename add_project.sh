@@ -11,7 +11,7 @@ read link
 
 
 
-wget $link --no-check-certificate -o /dev/null
+wget $link -q --spider -o /dev/null
 if [ $? -ne 0 ]; then
     echo "Invalid repository!"
     exit 1
