@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# declaring variables
 setup=true
 run=true
 delete=false
@@ -10,12 +11,14 @@ declare -A data
 declare -a projects
 declare -a checkers
 
+# list all available projects
 list_projects () {
     printf "The container has been set up to test the following projects:\n\n"
     printf '%s\n' "${projects[@]}"
     exit 0
 }
 
+# store all available projects to data array
 get_all_projects () {
     cd /opt/wd/
     while read proj link; do
@@ -30,6 +33,7 @@ get_all_projects () {
     done
 }
 
+# store all chosen projects and their links in data array
 get_chosen_projects_link () {
     cd /opt/wd/
     for p in ${projects[@]}; do
@@ -43,12 +47,17 @@ get_chosen_projects_link () {
     done <"project_links.txt"
 }
 
+# Clone or fetch the git repo of a project and checkout to the latest tag
 update_repo () {
     p=$1
     echo "Checking "$p" directory..."
     cd /testDir
     if [ ! -d $p ]; then
         git clone ${data[$p]}
+        if [ $? -ne 0 ]; then
+            printf "Error: cloning $p is failed. \nPlease, try again, disable the project or try to add the link of the project with add_project.sh\n"
+            exit 5
+        fi
     else
         cd /testDir/$p
         git fetch --all --tags
@@ -58,54 +67,95 @@ update_repo () {
     git checkout tags/$latesttag
 }
 
+# Trying to configure a project in numerous ways
 configure_project () {
     p=$1
     cd /testDir/$p
     echo "Configuring "$p"..."
+    # Cleaning last build
     make clean
+    # Configuring with....
     if [ -f "/opt/wd/setup_files/"$p"_setup.sh" ]; then
+        # ...special config file
         echo "Special config file is found"
         cp "/opt/wd/setup_files/"$p"_setup.sh" ./setup.sh
         bash "./setup.sh"
+        if [ $? -ne 0 ]; then
+            printf 'Error: '$p'_setup.sh failed. Please, disable '$p' or try to fix the following setup file: /clang-test-docker/setup_files/'$p'_setup.sh\nMake sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>'
+            exit 5
+        fi
         rm ./setup.sh
     else
         if [ -f "CMakeLists.txt" ]; then
+            # ...cmake...
             echo "CMakeLists.txt is found"
             cmake .
+            if [ $? -ne 0 ]; then
+                printf 'Error: CMake failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>'
+                exit 7
+            fi
         fi
         if [ -f "./autogen.sh" ]; then
+            # ...autogen.sh...
             echo "autogen.sh is found"
             sh ./autogen.sh
+            if [ $? -ne 0 ]; then
+                printf 'Error: autogen.sh failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>'
+                exit 8
+            fi
         fi
         if [ -f "./buildconf" ]; then
+            # ...buildconf...
             echo "buildconf is found"
             ./buildconf
+            if [ $? -ne 0 ]; then
+                printf 'Error: buildconf failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>'
+                exit 9
+            fi
         fi
         if [ -f "./configure" ]; then
             echo "Configure file is found"
             if [ -f "/opt/wd/setup_files/"$p"_config_args.txt" ]; then
+                # ...configure with specified arguments
                 echo "Configure argument file is found"
                 arguments=$(<"/opt/wd/setup_files/"$p"_config_args.txt")
                 ./configure $arguments
+                if [ $? -ne 0 ]; then
+                    printf 'Error: buildconf failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>'
+                    exit 10
+                fi
             else
+                # configure without specified arguments
                 ./configure
+                if [ $? -ne 0 ]; then
+                    printf 'Error: buildconf failed during configuring '$p'. Please, disable '$p', check your custom configure arguments or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>'
+                    exit 11
+                fi
             fi
         fi
     fi
 }
 
+# configuring CodeChecker
 codechecker_config () {
     echo "Configuring up CodeChecker..."
     cd /testDir/codechecker
     make venv
+    if [ $? -ne 0 ]; then
+        printf 'Error: Configuring CodeChecker failed. Please, rebuild the image.'
+        exit 4
+    fi
     . $PWD/venv/bin/activate
     make package
+    if [ $? -ne 0 ]; then
+        printf 'Error: Configuring CodeChecker failed. Please, rebuild the image.'
+        exit 4
+    fi
     export PATH="$PWD/build/CodeChecker/bin:$PATH"
 
-    if [ ! -d /llvm-project ]; then
-        echo "Warning: own clang was not specified"
-    elif [ ! -f /llvm-project/build/bin/clang ] || [ ! -f /llvm-project/build/bin/clang-tidy ]; then
-        echo "Warning: clang or clang-tidy binaries are not found"
+    if [ ! -f /llvm-project/build/bin/clang ] || [ ! -f /llvm-project/build/bin/clang-tidy ]; then
+        printf "Error: clang or clang-tidy binaries are not found.\nMake sure that you volumed the right llvm-project directory and the build directory located in llvm-project/build.\n"
+        exit 13
     else
         cd /testDir/codechecker/build/CodeChecker/config/
         json=$(cat package_layout.json)
@@ -113,6 +163,7 @@ codechecker_config () {
     fi
 }
 
+# Running "CodeChecker log" on a project
 codechecker_log () {
     p=$1
     cd /testDir/$p
@@ -120,6 +171,7 @@ codechecker_log () {
     CodeChecker log -b "make -j42" "-o" "compilation.json"
 }
 
+# Setting up Codechecker argument (checker) for chosen checkers
 setup_checkers () {
     if [ "$checker" == "all" ]; then
         checker="--enable-all --disable Wall"
@@ -128,10 +180,17 @@ setup_checkers () {
         for c in "${checkers[@]}"; do
             enableChs="$enableChs --enable $c"
         done
-        checker="--disable Weverything --disable default $enableChs"
+        disableChs=''
+        modules=( "abseil" "android" "boost" "bugprone" "cert" "cppcoreguidelines" "darwin" "fuchsia" "google" "hicpp" "linuxkernel" 
+            "llvm" "misc" "modernize" "mpi" "objc" "openmp" "performance" "portability" "readability" "zircon" )
+        for m in "${modules[@]}"; do
+            disableChs="$disableChs --disable $m"
+        done
+        checker="--disable default --disable Weverything $disableChs $enableChs"
     fi
 }
 
+# Running "CodeChecker analyze" on a project
 codechecker_analyze () {
     p=$1
     cd /testDir/$p
@@ -144,12 +203,11 @@ codechecker_analyze () {
         $checker \
         -o "/testDir/reports/"$p \
         -j 42
-    #TODO:
-    #--tidyargs /home/username/test_env/tidy_args.txt
 
     CodeChecker parse "/testDir/reports/"$p -e html -o "/testDir/reports/"$p"/html"
 }
 
+# Delete all chosen projects
 delete_projects () {
     echo "Deleting projects..."
     cd /testDir
@@ -159,6 +217,7 @@ delete_projects () {
     done
 }
 
+# Check if checkers names are valid or not
 check_checkers () {
     cd /testDir/codechecker/build/CodeChecker/config/
     json=$(cat package_layout.json)
@@ -168,11 +227,25 @@ check_checkers () {
         $tidy -list-checks -checks=* | grep $c -q
         if [ $? -ne 0 ]; then
             echo "Error: invalid checker name: $c"
-            exit 1
+            exit 2
         fi
     done
 }
 
+# Check if the necessary folders are mounted or not
+check_args () {
+    if [ ! -d /llvm-project ]; then
+        printf "Error: /llvm-project is not found! \nMake sure that you added it as a volume. \nExample:\tdocker run -v /path/to/test/dir/:/testDir -v /path/to/llvm-project/:/llvm-project <yourContainerName>\n"
+        exit 15
+    elif [ ! -d /testDir ]; then
+        printf "Error: /testDir is not found! \nMake sure that you added it as a volume. \nExample:\tdocker run -v /path/to/test/dir/:/testDir -v /path/to/llvm-project/:/llvm-project <yourContainerName>\n"
+        exit 15
+    fi
+}
+
+# PROGRAM STARTS
+
+# Reading and storing arguments
 if [ "$1" == "FALSE" ]; then
     setup=false
 elif [ ! "$1" == "TRUE" ]; then
@@ -202,17 +275,19 @@ projects_string="${@:6}"
 IFS=',' read -ra projects <<<"$projects_string"
 IFS=',' read -ra checkers <<<"$checker"
 
+# Starting working
 if $list; then
     list_projects
 fi
 
+# Get projects and their git links
 if [ "$projects" == "all" ]; then
     get_all_projects
 else
     data+=(["codechecker"]="")
     bash ./check_projects_arg.sh "${projects[@]}"
     if [ $? -ne 0 ]; then
-        exit 4
+        exit 3
     fi
     get_chosen_projects_link
 fi
@@ -223,8 +298,10 @@ for p in "${!data[@]}"; do
     fi
 done
 
-#SETUP
+# SETUP
 if $setup; then
+    # Configuring projects
+    check_args
     echo "Setting up projects..."
     for p in "${!data[@]}"; do
         update_repo $p
@@ -237,7 +314,7 @@ if $setup; then
 
     codechecker_config
 
-    #run CodeChecker
+    # Running CodeChecker log
     for p in "${!data[@]}"; do
         codechecker_log $p
     done
@@ -246,11 +323,13 @@ fi
 
 #Running checks
 if $run; then
+    # Checking arguments
+    check_args
     if [ ! "$checker" == "all" ]; then
         echo "Checking checker names..."
         check_checkers "${checkers[@]}"
     fi
-
+    # Set up environment for Codechecker
     echo "Setting up environment..."
     cd /testDir/codechecker
     . /testDir/codechecker/venv/bin/activate
@@ -261,6 +340,7 @@ if $run; then
         mkdir reports
     fi
 
+    # Setting up arguments and runningy CodeChecker analyze
     unset 'data[codechecker]'
     setup_checkers
 
@@ -272,6 +352,7 @@ if $run; then
 
 fi
 
+# Deleting projects or make the user be able to do it later
 if $delete; then
     delete_projects
 else

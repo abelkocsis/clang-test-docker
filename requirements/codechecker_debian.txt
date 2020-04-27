@@ -6,3 +6,4 @@ git
 python3-dev
 python-virtualenv
 jq
+cmake
