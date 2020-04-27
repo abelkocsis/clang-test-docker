@@ -1,7 +1,0 @@
-build-essential
-curl
-doxygen
-gcc-multilib
-git
-python-virtualenv
-python3-dev

@@ -9,11 +9,11 @@ if [ -z "$projects" ]; then
     exit 1
 fi
 if [ ! -f "./project_links.txt" ]; then
-    echo "Error: project_links.txt file not found!"
+    echo "Error: project_links.txt file is not found!"
     exit 2
 fi
 if [ ! -d "./requirements" ]; then
-    echo "Error: requirements folder not found!"
+    echo "Error: requirements folder is not found!"
     exit 3
 fi
 
@@ -24,12 +24,23 @@ if [ "$projects" == "all" ]; then
     do
         projects+=($proj)
     done < "./project_links.txt"
+    for setup_file in /opt/wd/setup_files/*_setup.sh ; do
+        basename=$(basename $setup_file)
+        proj=${basename%_setup.sh}
+        if [[ ! " ${projects[@]} " =~ " ${proj} " ]]; then
+            projects+=($proj)
+        fi
 
+    done 
+else
+    bash ./check_projects_arg.sh "${projects[@]}"
+    if [ $? -ne 0 ]; then
+        exit 4
+    fi
 fi
 
-for p in "${projects[@]}"
-do
-    echo "Install dependencies for $p project..."
+for p in "${projects[@]}" ; do
+    echo "Installing dependencies for $p project..."
     if [ -f "./requirements/"$p"_custom_deps_debian.sh" ]; then
         echo "Custom setup for $p: ./requirements/"$p"_custom_deps_debian.sh"
         bash "./requirements/"$p"_custom_deps_debian.sh"
