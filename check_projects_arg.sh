@@ -2,6 +2,7 @@
 
 declare -a all_projects
 
+# Reading all available projects
 while read proj link ; do
     all_projects+=($proj)
 done < "./project_links.txt"
@@ -15,6 +16,7 @@ done
 
 projects=("$@")
 
+# Checking if arguments are valid projects or not
 for p in "${projects[@]}" ; do
     if [[ ! "${all_projects[@]}" =~ "${p}" ]]; then
         echo "Error: $p is not a valid project name"

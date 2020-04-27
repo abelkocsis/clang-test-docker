@@ -1,6 +1,0 @@
-alpine-sdk
-doxygen
-gcc
-git
-python3-dev
-jq

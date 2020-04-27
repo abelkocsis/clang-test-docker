@@ -1,0 +1,4 @@
+jq
+cmake
+git
+build-essential
