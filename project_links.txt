@@ -1,7 +1,6 @@
 bitcoin https://github.com/bitcoin/bitcoin.git
 codechecker https://github.com/Ericsson/codechecker.git
 ffmpeg https://git.ffmpeg.org/ffmpeg.git
-memcached git://github.com/memcached/memcached.git
 nginx https://github.com/nginx/nginx.git
 postgres https://github.com/postgres/postgres.git
 redis https://github.com/antirez/redis.git
@@ -14,3 +13,4 @@ enkiTS https://github.com/dougbinks/enkiTS.git
 RaftLib https://github.com/RaftLib/RaftLib.git
 FiberTaskingLib https://github.com/RichieSams/FiberTaskingLib.git
 curl https://github.com/curl/curl.git
+memcached https://github.com/memcached/memcached.git

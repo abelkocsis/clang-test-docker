@@ -81,7 +81,7 @@ configure_project () {
         cp "/opt/wd/setup_files/"$p"_setup.sh" ./setup.sh
         bash "./setup.sh"
         if [ $? -ne 0 ]; then
-            printf 'Error: '$p'_setup.sh failed. Please, disable '$p' or try to fix the following setup file: /clang-test-docker/setup_files/'$p'_setup.sh\nMake sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>'
+            printf 'Error: '$p'_setup.sh failed. Please, disable '$p' or try to fix the following setup file: /clang-test-docker/setup_files/'$p'_setup.sh\nMake sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
             exit 5
         fi
         rm ./setup.sh
@@ -91,7 +91,7 @@ configure_project () {
             echo "CMakeLists.txt is found"
             cmake .
             if [ $? -ne 0 ]; then
-                printf 'Error: CMake failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>'
+                printf 'Error: CMake failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
                 exit 7
             fi
         fi
@@ -100,7 +100,7 @@ configure_project () {
             echo "autogen.sh is found"
             sh ./autogen.sh
             if [ $? -ne 0 ]; then
-                printf 'Error: autogen.sh failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>'
+                printf 'Error: autogen.sh failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
                 exit 8
             fi
         fi
@@ -109,7 +109,7 @@ configure_project () {
             echo "buildconf is found"
             ./buildconf
             if [ $? -ne 0 ]; then
-                printf 'Error: buildconf failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>'
+                printf 'Error: buildconf failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
                 exit 9
             fi
         fi
@@ -121,14 +121,14 @@ configure_project () {
                 arguments=$(<"/opt/wd/setup_files/"$p"_config_args.txt")
                 ./configure $arguments
                 if [ $? -ne 0 ]; then
-                    printf 'Error: buildconf failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>'
+                    printf 'Error: buildconf failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
                     exit 10
                 fi
             else
                 # configure without specified arguments
                 ./configure
                 if [ $? -ne 0 ]; then
-                    printf 'Error: buildconf failed during configuring '$p'. Please, disable '$p', check your custom configure arguments or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>'
+                    printf 'Error: buildconf failed during configuring '$p'. Please, disable '$p', check your custom configure arguments or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
                     exit 11
                 fi
             fi

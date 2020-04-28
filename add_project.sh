@@ -53,7 +53,7 @@ fi
 printf "\nAfter cloning, the tester automatically finds the following files in the project main directory: autogen.sh, configure.sh, CMakeLists.txt, buildconf.sh."
 
 #config_Args -> ./setup_files/p_config_args.txt
-printf "\nIf you want, you can add additional arguments to the configure.sh file by typing here: "
+printf "\nIf you want, you can add additional arguments to the configure script by typing here: "
 read configArgs
 if [ "$configArgs" ]; then
     echo "$configArgs" > "$root/setup_files/$name""_config_args.txt"
