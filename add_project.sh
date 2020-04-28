@@ -2,7 +2,6 @@
 
 root=$PWD
 
-#NAME
 printf "Adding project to test docker..."
 
 #LINK -> git_links.txt

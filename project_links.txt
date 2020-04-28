@@ -1,6 +1,5 @@
 bitcoin https://github.com/bitcoin/bitcoin.git
 codechecker https://github.com/Ericsson/codechecker.git
-curl https://github.com/curl/curl.git
 ffmpeg https://git.ffmpeg.org/ffmpeg.git
 memcached git://github.com/memcached/memcached.git
 nginx https://github.com/nginx/nginx.git
@@ -14,3 +13,4 @@ cpp-taskflow https://github.com/cpp-taskflow/cpp-taskflow.git
 enkiTS https://github.com/dougbinks/enkiTS.git
 RaftLib https://github.com/RaftLib/RaftLib.git
 FiberTaskingLib https://github.com/RichieSams/FiberTaskingLib.git
+curl https://github.com/curl/curl.git
