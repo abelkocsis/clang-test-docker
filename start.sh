@@ -13,7 +13,7 @@ declare -a checkers
 
 # list all available projects
 list_projects () {
-    printf "The container has been set up to test the following projects:\n\n"
+    printf "TestEnv: The container has been set up to test the following projects:\n\n"
     printf '%s\n' "${projects[@]}"
     exit 0
 }
@@ -50,12 +50,12 @@ get_chosen_projects_link () {
 # Clone or fetch the git repo of a project and checkout to the latest tag
 update_repo () {
     p=$1
-    echo "Checking "$p" directory..."
+    echo "TestEnv: Checking "$p" directory..."
     cd /testDir
     if [ ! -d $p ]; then
         git clone ${data[$p]}
         if [ $? -ne 0 ]; then
-            printf "Error: cloning $p is failed. \nPlease, try again, disable the project or try to add the link of the project with add_project.sh\n"
+            printf "TestEnv Error: cloning $p is failed. \nPlease, try again, disable the project or try to add the link of the project with add_project.sh\n"
             exit 5
         fi
     else
@@ -71,64 +71,64 @@ update_repo () {
 configure_project () {
     p=$1
     cd /testDir/$p
-    echo "Configuring "$p"..."
+    echo "TestEnv: Configuring "$p"..."
     # Cleaning last build
     make clean
     # Configuring with....
     if [ -f "/opt/wd/setup_files/"$p"_setup.sh" ]; then
         # ...special config file
-        echo "Special config file is found"
+        echo "TestEnv: Special config file is found"
         cp "/opt/wd/setup_files/"$p"_setup.sh" ./setup.sh
         bash "./setup.sh"
         if [ $? -ne 0 ]; then
-            printf 'Error: '$p'_setup.sh failed. Please, disable '$p' or try to fix the following setup file: /clang-test-docker/setup_files/'$p'_setup.sh\nMake sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
+            printf 'TestEnv Error: '$p'_setup.sh failed. Please, disable '$p' or try to fix the following setup file: /clang-test-docker/setup_files/'$p'_setup.sh\nMake sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
             exit 5
         fi
         rm ./setup.sh
     else
         if [ -f "CMakeLists.txt" ]; then
             # ...cmake...
-            echo "CMakeLists.txt is found"
+            echo "TestEnv: CMakeLists.txt is found"
             cmake .
             if [ $? -ne 0 ]; then
-                printf 'Error: CMake failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
+                printf 'TestEnv Error: CMake failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
                 exit 7
             fi
         fi
         if [ -f "./autogen.sh" ]; then
             # ...autogen.sh...
-            echo "autogen.sh is found"
+            echo "TestEnv: autogen.sh is found"
             sh ./autogen.sh
             if [ $? -ne 0 ]; then
-                printf 'Error: autogen.sh failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
+                printf 'TestEnv Error: autogen.sh failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
                 exit 8
             fi
         fi
         if [ -f "./buildconf" ]; then
             # ...buildconf...
-            echo "buildconf is found"
+            echo "TestEnv: buildconf is found"
             ./buildconf
             if [ $? -ne 0 ]; then
-                printf 'Error: buildconf failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
+                printf 'TestEnv Error: buildconf failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
                 exit 9
             fi
         fi
         if [ -f "./configure" ]; then
-            echo "Configure file is found"
+            echo "TestEnv: Configure file is found"
             if [ -f "/opt/wd/setup_files/"$p"_config_args.txt" ]; then
                 # ...configure with specified arguments
-                echo "Configure argument file is found"
+                echo "TestEnv: Configure argument file is found"
                 arguments=$(<"/opt/wd/setup_files/"$p"_config_args.txt")
                 ./configure $arguments
                 if [ $? -ne 0 ]; then
-                    printf 'Error: buildconf failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
+                    printf 'TestEnv Error: buildconf failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
                     exit 10
                 fi
             else
                 # configure without specified arguments
                 ./configure
                 if [ $? -ne 0 ]; then
-                    printf 'Error: buildconf failed during configuring '$p'. Please, disable '$p', check your custom configure arguments or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
+                    printf 'TestEnv Error: buildconf failed during configuring '$p'. Please, disable '$p', check your custom configure arguments or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
                     exit 11
                 fi
             fi
@@ -138,23 +138,23 @@ configure_project () {
 
 # configuring CodeChecker
 codechecker_config () {
-    echo "Configuring up CodeChecker..."
+    echo "TestEnv: Configuring up CodeChecker..."
     cd /testDir/codechecker
     make venv
     if [ $? -ne 0 ]; then
-        printf 'Error: Configuring CodeChecker failed. Please, rebuild the image.'
+        printf 'TestEnv Error: Configuring CodeChecker failed. Please, rebuild the image.'
         exit 4
     fi
     . $PWD/venv/bin/activate
     make package
     if [ $? -ne 0 ]; then
-        printf 'Error: Configuring CodeChecker failed. Please, rebuild the image.'
+        printf 'TestEnv Error: Configuring CodeChecker failed. Please, rebuild the image.'
         exit 4
     fi
     export PATH="$PWD/build/CodeChecker/bin:$PATH"
 
     if [ ! -f /llvm-project/build/bin/clang ] || [ ! -f /llvm-project/build/bin/clang-tidy ]; then
-        printf "Error: clang or clang-tidy binaries are not found.\nMake sure that you volumed the right llvm-project directory and the build directory located in llvm-project/build.\n"
+        printf "TestEnv Error: clang or clang-tidy binaries are not found.\nMake sure that you volumed the right llvm-project directory and the build directory located in llvm-project/build.\n"
         exit 13
     else
         cd /testDir/codechecker/build/CodeChecker/config/
@@ -167,7 +167,7 @@ codechecker_config () {
 codechecker_log () {
     p=$1
     cd /testDir/$p
-    echo "Running CodeChecker log on "$p"..."
+    echo "TestEnv: Running CodeChecker log on "$p"..."
     CodeChecker log -b "make -j42" "-o" "compilation.json"
 }
 
@@ -209,10 +209,10 @@ codechecker_analyze () {
 
 # Delete all chosen projects
 delete_projects () {
-    echo "Deleting projects..."
+    echo "TestEnv: Deleting projects..."
     cd /testDir
     for p in "${!data[@]}"; do
-        echo "Deleting "$p"..."
+        echo "TestEnv: Deleting "$p"..."
         rm -r $p
     done
 }
@@ -226,7 +226,7 @@ check_checkers () {
     for c in "${checks[@]}"; do
         $tidy -list-checks -checks=* | grep $c -q
         if [ $? -ne 0 ]; then
-            echo "Error: invalid checker name: $c"
+            echo "TestEnv Error: invalid checker name: $c"
             exit 2
         fi
     done
@@ -235,10 +235,10 @@ check_checkers () {
 # Check if the necessary folders are mounted or not
 check_args () {
     if [ ! -d /llvm-project ]; then
-        printf "Error: /llvm-project is not found! \nMake sure that you added it as a volume. \nExample:\tdocker run -v /path/to/test/dir/:/testDir -v /path/to/llvm-project/:/llvm-project <yourContainerName>\n"
+        printf "TestEnv Error: /llvm-project is not found! \nMake sure that you added it as a volume. \nExample:\tdocker run -v /path/to/test/dir/:/testDir -v /path/to/llvm-project/:/llvm-project <yourContainerName>\n"
         exit 15
     elif [ ! -d /testDir ]; then
-        printf "Error: /testDir is not found! \nMake sure that you added it as a volume. \nExample:\tdocker run -v /path/to/test/dir/:/testDir -v /path/to/llvm-project/:/llvm-project <yourContainerName>\n"
+        printf "TestEnv Error: /testDir is not found! \nMake sure that you added it as a volume. \nExample:\tdocker run -v /path/to/test/dir/:/testDir -v /path/to/llvm-project/:/llvm-project <yourContainerName>\n"
         exit 15
     fi
 }
@@ -249,25 +249,25 @@ check_args () {
 if [ "$1" == "FALSE" ]; then
     setup=false
 elif [ ! "$1" == "TRUE" ]; then
-    echo "Warning: setup argument is neither TRUE nor FALSE. Default TRUE value is applied."
+    echo "TestEnv Warning: setup argument is neither TRUE nor FALSE. Default TRUE value is applied."
 fi
 
 if [ "$2" == "FALSE" ]; then
     run=false
 elif [ ! "$2" == "TRUE" ]; then
-    echo "Warning: run argument is neither TRUE nor FALSE. Default TRUE value is applied."
+    echo "TestEnv Warning: run argument is neither TRUE nor FALSE. Default TRUE value is applied."
 fi
 
 if [ "$4" == "TRUE" ]; then
     delete=true
 elif [ ! "$4" == "FALSE" ]; then
-    echo "Warning: delete argument is neither TRUE nor FALSE. Default FALSE value is applied."
+    echo "TestEnv Warning: delete argument is neither TRUE nor FALSE. Default FALSE value is applied."
 fi
 
 if [ "$5" == "TRUE" ]; then
     list=true
 elif [ ! "$5" == "FALSE" ]; then
-    echo "Warning: list argument is neither TRUE nor FALSE. Default FALSE value is applied."
+    echo "TestEnv Warning: list argument is neither TRUE nor FALSE. Default FALSE value is applied."
 fi
 
 projects_string="${@:6}"
@@ -294,7 +294,7 @@ fi
 
 for p in "${!data[@]}"; do
     if [ ! ${data[$p]} ]; then
-        echo "Warning: there is no git link for "$p
+        echo "TestEnv Warning: there is no git link for "$p
     fi
 done
 
@@ -302,7 +302,7 @@ done
 if $setup; then
     # Configuring projects
     check_args
-    echo "Setting up projects..."
+    echo "TestEnv: Setting up projects..."
     for p in "${!data[@]}"; do
         update_repo $p
     done
@@ -326,11 +326,11 @@ if $run; then
     # Checking arguments
     check_args
     if [ ! "$checker" == "all" ]; then
-        echo "Checking checker names..."
+        echo "TestEnv: Checking checker names..."
         check_checkers "${checkers[@]}"
     fi
     # Set up environment for Codechecker
-    echo "Setting up environment..."
+    echo "TestEnv: Setting up environment..."
     cd /testDir/codechecker
     . /testDir/codechecker/venv/bin/activate
     export PATH=/testDir/codechecker/build/CodeChecker/bin:$PATH
@@ -344,9 +344,9 @@ if $run; then
     unset 'data[codechecker]'
     setup_checkers
 
-    echo "Running analysis..."
+    echo "TestEnv: Running analyzis..."
     for p in "${!data[@]}"; do
-        echo "Running CodeChecker analyze on "$p"..."
+        echo "TestEnv: Running CodeChecker analyze on "$p"..."
         codechecker_analyze $p
     done
 
@@ -356,9 +356,10 @@ fi
 if $delete; then
     delete_projects
 else
-    echo "Setting up permissions..."
+    echo "TestEnv: Setting up permissions..."
     cd /testDir
     for p in "${!data[@]}"; do
         chmod -R uog=rwx $p
     done
 fi
+echo "TestEnv: Done!"
