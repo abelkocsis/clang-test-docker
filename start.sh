@@ -114,21 +114,21 @@ configure_project () {
             fi
         fi
         if [ -f "./configure" ]; then
-            echo "TestEnv: Configure file is found"
+            echo "TestEnv: configure file is found"
             if [ -f "/opt/wd/setup_files/"$p"_config_args.txt" ]; then
                 # ...configure with specified arguments
-                echo "TestEnv: Configure argument file is found"
+                echo "TestEnv: configure argument file is found"
                 arguments=$(<"/opt/wd/setup_files/"$p"_config_args.txt")
                 ./configure $arguments
                 if [ $? -ne 0 ]; then
-                    printf 'TestEnv Error: buildconf failed during configuring '$p'. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
+                    printf 'TestEnv Error: configure failed during configuring '$p' with additional arguments. Please, disable '$p' or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
                     exit 10
                 fi
             else
                 # configure without specified arguments
                 ./configure
                 if [ $? -ne 0 ]; then
-                    printf 'TestEnv Error: buildconf failed during configuring '$p'. Please, disable '$p', check your custom configure arguments or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
+                    printf 'TestEnv Error: configure failed during configuring '$p'. Please, disable '$p', check your custom configure arguments or make sure that you added '$p' during building the image. \nYou can list the possible projects in the following way:\tdocker run -e "list=TRUE" <yourContainerName>\n'
                     exit 11
                 fi
             fi
