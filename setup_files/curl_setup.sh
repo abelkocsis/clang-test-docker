@@ -1,1 +1,2 @@
+./buildconf
 ./configure

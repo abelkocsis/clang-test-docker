@@ -23,5 +23,4 @@ WORKDIR /opt/wd
 
 RUN bash install-deps.sh $projects
 
-CMD ["bash", "-c", "/testDir/clang-test-docker/start.sh ${setup} ${run} ${checker} ${delete} ${list} ${projects}" ]
-#TODO: ./start.sh
+CMD ["bash", "-c", "./start.sh ${setup} ${run} ${checker} ${delete} ${list} ${projects}" ]

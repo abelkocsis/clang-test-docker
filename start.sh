@@ -52,7 +52,7 @@ update_repo () {
     p=$1
     echo "TestEnv: Checking "$p" directory..."
     cd /testDir
-    if [ ! -d $p ]; then
+    if [ ! -d $p ] && [ ${data[$p]} ] ; then
         git clone ${data[$p]}
         if [ $? -ne 0 ]; then
             printf "TestEnv Error: cloning $p is failed. \nPlease, try again, disable the project or try to add the link of the project with add_project.sh\n"
@@ -361,5 +361,7 @@ else
     for p in "${!data[@]}"; do
         chmod -R uog=rwx $p
     done
+    chmod -R uog=rwx codechecker
+    chmod -R uog=rwx reports
 fi
 echo "TestEnv: Done!"
