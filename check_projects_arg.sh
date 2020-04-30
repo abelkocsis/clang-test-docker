@@ -18,7 +18,14 @@ projects=("$@")
 
 # Checking if arguments are valid projects or not
 for p in "${projects[@]}" ; do
-    if [[ ! "${all_projects[@]}" =~ "${p}" ]]; then
+    found=false
+    for a in "${all_projects[@]}" ; do
+        if [ "$p" == "$a" ]; then
+            found=true
+            break
+        fi
+    done
+    if ! $found; then
         echo "TestEnv Error: $p is not a valid project name"
         exit 1
     fi
