@@ -4,7 +4,7 @@
 setup=true
 run=true
 delete=false
-checker=$3
+checkers_string=$3
 list=false
 
 declare -A data
@@ -173,7 +173,7 @@ codechecker_log () {
 
 # Setting up Codechecker argument (checker) for chosen checkers
 setup_checkers () {
-    if [ "$checker" == "all" ]; then
+    if [ "$checkers_string" == "all" ]; then
         checker="--enable-all --disable Wall"
     else
         enableChs=''
@@ -273,7 +273,7 @@ fi
 projects_string="${@:6}"
 
 IFS=',' read -ra projects <<<"$projects_string"
-IFS=',' read -ra checkers <<<"$checker"
+IFS=',' read -ra checkers <<<"$checkers_string"
 
 # Starting working
 if $list; then
@@ -325,7 +325,7 @@ fi
 if $run; then
     # Checking arguments
     check_args
-    if [ ! "$checker" == "all" ]; then
+    if [ ! "$checkers_string" == "all" ]; then
         echo "TestEnv: Checking checker names..."
         check_checkers "${checkers[@]}"
     fi
