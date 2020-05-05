@@ -11,7 +11,7 @@ docker build -t test-clang . --build-arg projects=FiberTaskingLib --build-arg de
 docker run -v $testDir:/testDir -v $llvm:/llvm-project test-clang
 
 #4
-docker build -t test-clang . --build-arg projects=tmux --build-arg run=FALSE
+docker build -t test-clang . --build-arg projects=tmux --build-arg analyze=FALSE
 docker run -v $testDir:/testDir -v $llvm:/llvm-project test-clang
 
 

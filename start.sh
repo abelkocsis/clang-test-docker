@@ -2,7 +2,7 @@
 
 # declaring variables
 setup=true
-run=true
+analyze=true
 delete=false
 checkers_string=$3
 list=false
@@ -253,9 +253,9 @@ elif [ ! "$1" == "TRUE" ]; then
 fi
 
 if [ "$2" == "FALSE" ]; then
-    run=false
+    analyze=false
 elif [ ! "$2" == "TRUE" ]; then
-    echo "TestEnv Warning: run argument is neither TRUE nor FALSE. Default TRUE value is applied."
+    echo "TestEnv Warning: analyze argument is neither TRUE nor FALSE. Default TRUE value is applied."
 fi
 
 if [ "$4" == "TRUE" ]; then
@@ -322,7 +322,7 @@ if $setup; then
 fi
 
 #Running checks
-if $run; then
+if $analyze; then
     # Checking arguments
     check_args
     if [ ! "$checkers_string" == "all" ]; then

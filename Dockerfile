@@ -1,13 +1,13 @@
 FROM debian:stable-slim
 
 ARG setup=TRUE
-ARG run=TRUE
+ARG analyze=TRUE
 ARG checkers="all"
 ARG delete=FALSE
 ARG projects="all"
 
 ENV setup ${setup}
-ENV run ${run}
+ENV analyze ${analyze}
 ENV projects ${projects}
 ENV checkers=${checkers}
 ENV delete=${delete}
@@ -23,4 +23,4 @@ WORKDIR /opt/wd
 
 RUN bash install_deps.sh $projects
 
-CMD ["bash", "-c", "./start.sh ${setup} ${run} ${checkers} ${delete} ${list} ${projects}" ]
+CMD ["bash", "-c", "./start.sh ${setup} ${analyze} ${checkers} ${delete} ${list} ${projects}" ]
