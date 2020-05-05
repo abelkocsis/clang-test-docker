@@ -6,6 +6,7 @@ analyze=true
 delete=false
 checkers_string=$3
 list=false
+checker=""
 
 declare -A data
 declare -a projects
@@ -354,6 +355,7 @@ fi
 
 # Deleting projects or make the user be able to do it later
 if $delete; then
+    unset 'data[codechecker]'
     delete_projects
 else
     echo "TestEnv: Setting up permissions..."
