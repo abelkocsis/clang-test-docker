@@ -64,8 +64,8 @@ update_repo () {
         git fetch --all --tags
     fi
     cd /testDir/$p
-    latesttag=$(git describe --tags)
-    git checkout tags/$latesttag
+    latesttag=$(git describe --tags `git rev-list --tags --max-count=1`)
+    git checkout $latesttag -f
 }
 
 # Trying to configure a project in numerous ways
