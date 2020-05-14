@@ -1,16 +1,16 @@
-#1
+# 1
 docker build -t test-clang . --build-arg projects=FiberTaskingLib
 docker run -v $testDir:/testDir -v $llvm:/llvm-project test-clang
 
-#2
+# 2
 docker build -t test-clang . --build-arg projects=enkiTS --build-arg delete=TRUE
 docker run -v $testDir:/testDir -v $llvm:/llvm-project test-clang
 
-#3
+# 3
 docker build -t test-clang . --build-arg projects=FiberTaskingLib --build-arg delete=TRUE --build-arg setup=FALSE --build-arg checkers=cert-err58-cpp
 docker run -v $testDir:/testDir -v $llvm:/llvm-project test-clang
 
-#4
+# 4
 docker build -t test-clang . --build-arg projects=tmux --build-arg analyze=FALSE
 docker run -v $testDir:/testDir -v $llvm:/llvm-project test-clang
 

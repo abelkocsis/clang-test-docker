@@ -9,6 +9,6 @@ tar -xvf thrift-0.13.0.tar.gz
 cd thrift-0.13.0
 ./bootstrap.sh
 ./configure
-make
+make -j14
 make install
 

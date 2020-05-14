@@ -141,6 +141,7 @@ configure_project () {
 codechecker_config () {
     echo "TestEnv: Configuring up CodeChecker..."
     cd /testDir/codechecker
+    git checkout v6.11.1
     make venv
     if [ $? -ne 0 ]; then
         printf 'TestEnv Error: Configuring CodeChecker failed. Please, rebuild the image.'
@@ -195,7 +196,9 @@ setup_checkers () {
 codechecker_analyze () {
     p=$1
     cd /testDir/$p
-    rm -r "/testDir/reports/"$p
+    if [ -d "/testDir/reports/"$p ]; then
+        rm -r "/testDir/reports/"$p
+    fi
     mkdir "/testDir/reports/"$p
 
     CodeChecker analyze \
@@ -359,11 +362,13 @@ if $delete; then
     delete_projects
 else
     echo "TestEnv: Setting up permissions..."
-    cd /testDir
-    for p in "${!data[@]}"; do
-        chmod -R uog=rwx $p
-    done
-    chmod -R uog=rwx codechecker
-    chmod -R uog=rwx reports
+    if [ $setup ]; then
+        cd /testDir
+        find . -exec chmod 777 {} \;
+    fi
+    if [ $analyze ]; then
+        cd /testDir/reports
+        find . -exec chmod 777 {} \;
+    fi
 fi
 echo "TestEnv: Done!"
