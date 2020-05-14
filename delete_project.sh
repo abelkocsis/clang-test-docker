@@ -1,7 +1,7 @@
 #!/bin/bash
 
-printf "Deleteing project on test docker..."
-printf "\nPlease, give the name of project you would like to delete: "
+printf "Deleting project on test docker..."
+printf "\nPlease, type the name of project you would like to delete: "
 read name
 
 bash check_projects_arg.sh $name
@@ -9,7 +9,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-printf "Deletting starts..."
+printf "Deleting..."
 if [ -f "setup_files/"$name"_setup.sh" ]; then
     rm "setup_files/"$name"_setup.sh"
 fi

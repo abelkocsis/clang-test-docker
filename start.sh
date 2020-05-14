@@ -362,13 +362,7 @@ if $delete; then
     delete_projects
 else
     echo "TestEnv: Setting up permissions..."
-    if [ $setup ]; then
-        cd /testDir
-        find . -exec chmod 777 {} \;
-    fi
-    if [ $analyze ]; then
-        cd /testDir/reports
-        find . -exec chmod 777 {} \;
-    fi
+    cd /testDir
+    chmod -R 777 ./
 fi
 echo "TestEnv: Done!"
