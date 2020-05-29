@@ -134,11 +134,11 @@ $ docker run \
 
 The result of analyzis will be saved on my local container at `$testingRootDir/reports/<project_name>/html` folder.
 
-### Add new projects
+### Add a new project
 
 You can add a totally new project before building an imgage. To do this, you should run the `add_project.sh` script. This script helps you to do all the necessary steps. If you would like to skip a question simply hit enter.
 
-### Delete projects
+### Delete a project
 
 If have added a project not in the right way and would like to re-add it, you should delete a project. To do this, simply tun `delete_project.sh`. Note that after that, no image will be able to use the project you have deletet.
 
