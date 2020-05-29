@@ -45,11 +45,11 @@ The following build-ags can be added:
 
 | Argument              | Available values        | Default value         | Description                             |
 | ----------------------|-------------------------|-----------------------|-----------------------------------------|
-| setup                 | TRUE / FALSE              | TRUE                  | Run the setup on default                |
-| analyze                 | TRUE / FALSE              | TRUE                  | Run the analyzis on default                |
-| projects               | all / Name of projects separated by comma | all  | Which projects should be configured and analyzed|
-| checkers                 | all / Name of checkers separated by comma              | all                  | Default checkers                |
-| delete                 | TRUE / FALSE              | FALSE                  | After running the abovemntioned operations, automatically delete the folders of the projects                |
+| setup                 | `TRUE` / `FALSE`              | `TRUE`                  | Run the setup on default                |
+| analyze                 | `TRUE` / `FALSE`              | `TRUE`                  | Run the analyzis on default                |
+| projects               | `all` / Name of projects separated by comma | `all`  | Which projects should be configured and analyzed|
+| checkers                 | `all` / Name of checkers separated by comma              | `all`                  | Default checkers                |
+| delete                 | `TRUE` / `FALSE`              | `FALSE`                  | After running the abovemntioned operations, automatically delete the folders of the projects                |
 
 Note that the container will be based on the image you biuld. This means that you must specify all projects you would like to analyze. You will not be able to add new projects to analyzis without building a new image.
 
